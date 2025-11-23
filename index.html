@@ -27,7 +27,7 @@
             position: relative; 
             width: 100%; 
             max-width: 800px; 
-            aspect-ratio: 16/9; /* Ratio plus standard */
+            aspect-ratio: 16/9; 
             border: 2px solid #555; 
             background: #222; 
             overflow: hidden; 
@@ -48,7 +48,7 @@
             font-size: 18px; text-shadow: 1px 1px 0 #000; 
         }
         
-        /* --- CONTROLES MOBILES OPTIMISÉS --- */
+        /* --- CONTROLES MOBILES --- */
         #controls { 
             display: none; 
             width: 100%; 
@@ -61,7 +61,6 @@
             align-items: center;
         }
         
-        /* Affichage des contrôles uniquement sur mobile/tablette ou petits écrans */
         @media (hover: none) and (pointer: coarse), (max-width: 900px) { 
             #controls { display: flex; } 
         }
@@ -69,21 +68,19 @@
         .d-pad { display: flex; gap: 25px; }
         
         .btn { 
-            width: 80px; height: 80px; /* Plus grand pour le pouce */
+            width: 80px; height: 80px; 
             background: rgba(255,255,255,0.1); 
             border: 2px solid rgba(255,255,255,0.3); 
             border-radius: 50%; 
             color: white; font-size: 35px; 
             display: flex; justify-content: center; align-items: center; 
-            touch-action: none;
-            cursor: pointer;
-            transition: transform 0.1s;
+            touch-action: none; cursor: pointer; transition: transform 0.1s;
         }
         
         .btn:active, .btn.pressed { background: rgba(255,255,255,0.3); transform: scale(0.9); }
         .btn-jump { background: rgba(46, 204, 113, 0.2); border-color: #2ECC71; width: 90px; height: 90px; }
 
-        /* --- ECRANS (Menu, Quiz, Fin) --- */
+        /* --- ECRANS --- */
         .screen { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(15, 20, 30, 0.98); 
@@ -100,27 +97,22 @@
             background: linear-gradient(to bottom, #27AE60, #1E8449); 
             color: white; border: none; padding: 15px 40px; 
             font-size: 20px; border-radius: 50px; cursor: pointer; 
-            font-weight: bold; box-shadow: 0 4px 0 #145A32; 
-            transition: transform 0.1s;
+            font-weight: bold; box-shadow: 0 4px 0 #145A32; transition: transform 0.1s;
         }
         button:active { transform: translateY(4px); box-shadow: none; }
-        button:hover { filter: brightness(1.1); }
         
-        /* QUIZ */
         .quiz-btn { 
             width: 100%; max-width: 500px; 
             background: #34495E; border: 2px solid #5D6D7E; 
             margin: 8px 0; padding: 15px; 
             border-radius: 10px; color: white; 
-            font-size: 16px; cursor: pointer; text-align: left; 
-            transition: 0.2s; 
+            font-size: 16px; cursor: pointer; text-align: left; transition: 0.2s; 
         }
         .quiz-btn:active { background: #2980B9; transform: scale(0.98); }
         
         #feedback-msg { font-size: 24px; font-weight: bold; margin-top: 20px; display: none; }
         .good { color: #2ECC71; } .bad { color: #E74C3C; }
 
-        /* PARCHEMIN FIN */
         .parchemin { 
             background: #F5CBA7; color: #5D4037; padding: 25px; border-radius: 5px; 
             border: 4px double #873600; max-width: 600px; font-family: 'Georgia', serif;
@@ -129,12 +121,7 @@
         .verset { font-style: italic; font-size: 18px; line-height: 1.5; margin: 15px 0; }
         .sourate { font-weight: bold; text-align: right; font-size: 14px; }
         
-        /* TEXTE MOBILE */
-        @media (max-width: 600px) {
-            h1 { font-size: 22px; }
-            p { font-size: 14px; }
-            .verset { font-size: 15px; }
-        }
+        @media (max-width: 600px) { h1 { font-size: 22px; } p { font-size: 14px; } .verset { font-size: 15px; } }
     </style>
 </head>
 <body>
@@ -143,364 +130,4 @@
     <canvas id="canvas" width="800" height="450"></canvas>
     
     <div id="ui">
-        <div class="badge" style="color:#3498DB">⏳ <span id="time-d">90</span></div>
-        <div class="badge">💰 <span id="score-d">0</span></div>
-        <div class="badge" style="color:#FF4444">❤️ <span id="life-d">3</span></div>
-    </div>
-
-    <div id="start" class="screen">
-        <h1>L'Odyssée de Zayd</h1>
-        <p>Les Empires s'affrontent.<br>Avance vers la droite, saute les obstacles.<br><b>Attrape les Livres Bleus pour le Quiz !</b></p>
-        <button onclick="launch()">JOUER</button>
-    </div>
-
-    <div id="quiz" class="screen hidden">
-        <h1 style="color:#F1C40F">Question !</h1>
-        <p id="q-txt" style="font-size:18px; font-weight:bold; color:#FFF; margin-bottom:15px;">...</p>
-        <div id="q-box" style="width:100%; display:flex; flex-direction:column; align-items:center;"></div>
-        <div id="feedback-msg"></div>
-    </div>
-
-    <div id="victory" class="screen hidden">
-        <div class="parchemin">
-            <h2 style="margin:0; font-size:20px;">✨ Révélation ✨</h2>
-            <div class="verset">
-                "Alif, Lam, Mim.<br>
-                Les Romains ont été vaincus, dans la contrée voisine.<br>
-                Mais après leur défaite, ils seront vainqueurs, dans quelques années."
-            </div>
-            <div class="sourate">Sourate Ar-Rum (30), 1-4</div>
-        </div>
-        <p style="color:#FFD700; margin:10px 0; font-size: 20px;">Score Final : <span id="final-score">0</span></p>
-        <button onclick="location.reload()">REJOUER</button>
-    </div>
-
-    <div id="gameover" class="screen hidden">
-        <h1 style="color:#E74C3C; font-size: 40px;">ÉCHEC</h1>
-        <p id="go-msg" style="font-size: 20px;">...</p>
-        <p style="color:#888;">N'abandonne pas, retente ta chance.</p>
-        <button onclick="location.reload()">RÉESSAYER</button>
-    </div>
-</div>
-
-<div id="controls">
-    <div class="d-pad">
-        <div class="btn" id="btn-l">⬅️</div>
-        <div class="btn" id="btn-r">➡️</div>
-    </div>
-    <div class="btn btn-jump" id="btn-j">🦘</div>
-</div>
-
-<script>
-    // --- 1. CHARGEMENT ---
-    const bg = new Image(); 
-    bg.src = 'fond.jpg'; // Assure-toi que cette image existe, sinon le dégradé prendra le relais
-    let bgOk = false; 
-    bg.onload = () => { bgOk = true; };
-
-    // Audio (Synthétiseur basique pour éviter les fichiers externes)
-    const ac = new (window.AudioContext || window.webkitAudioContext)();
-    function sfx(t) {
-        if(ac.state==='suspended') ac.resume();
-        const o=ac.createOscillator(), g=ac.createGain();
-        o.connect(g); g.connect(ac.destination);
-        const n=ac.currentTime;
-        
-        if(t=='j'){o.freq(200,400,0.1);g.vol(0.1,0,0.1);} // Saut
-        if(t=='c'){o.type='triangle';o.freq(1000,1800,0.1);g.vol(0.1,0,0.1);} // Coin
-        if(t=='h'){o.type='sawtooth';o.freq(150,50,0.3);g.vol(0.2,0,0.3);} // Hit
-        if(t=='w'){o.type='sine';o.freq(400,800,0.4);g.vol(0.2,0,0.4);} // Win
-        if(t=='q'){o.type='square';o.freq(600,900,0.2);g.vol(0.1,0,0.2);} // Quiz apparait
-        if(t=='ok'){o.type='sine';o.freq(500,1000,0.2);g.vol(0.1,0,0.2);} // Bonne réponse
-        if(t=='no'){o.type='sawtooth';o.freq(150,100,0.3);g.vol(0.2,0,0.3);} // Mauvaise réponse
-        
-        o.start(); o.stop(n+0.4);
-    }
-    
-    // Extensions prototypes pour faciliter l'audio
-    OscillatorNode.prototype.freq=function(v1,v2,t){this.frequency.setValueAtTime(v1,ac.currentTime);this.frequency.linearRampToValueAtTime(v2,ac.currentTime+t);}
-    GainNode.prototype.vol=function(v1,v2,t){this.gain.setValueAtTime(v1,ac.currentTime);this.gain.linearRampToValueAtTime(v2,ac.currentTime+t);}
-
-    // --- 2. MOTEUR ---
-    const cvs=document.getElementById('canvas');
-    const ctx=cvs.getContext('2d');
-    const LEVEL_W=3000;
-
-    let state='start', frame=0, camX=0, shake=0, flash=0;
-    let hero={x:50, y:300, w:30, h:45, vx:0, vy:0, life:3, invul:0, anim:0, g:false};
-    let timer=90, score=0, interval;
-    let plats=[], items=[], debris=[];
-    let keys={};
-    let questionPool = [];
-
-    const allQuestions = [
-        {q:"Combien d'habitants avait l'Empire Byzantin ?", a:["17 Millions", "8 Millions"], r:0},
-        {q:"Combien d'habitants avait l'Empire Sassanide ?", a:["8 Millions", "17 Millions"], r:0},
-        {q:"Quelle était la superficie de l'Empire Sassanide ?", a:["3,5 Millions km²", "10 Millions km²"], r:0}, // Correction valeur
-        {q:"Quelle était la religion des Byzantins ?", a:["Orthodoxie", "Mazdéisme"], r:0},
-        {q:"Quelle était la religion des Sassanides ?", a:["Zoroastrianisme", "Judaïsme"], r:0},
-        {q:"Quel Empire est représenté par le Lion ?", a:["Sassanide", "Byzantin"], r:0},
-        {q:"Quel Empire est représenté par l'Aigle ?", a:["Byzantin", "Sassanide"], r:0}
-    ];
-
-    function launch() {
-        document.getElementById('start').classList.add('hidden');
-        if(ac.state === 'suspended') ac.resume();
-        
-        plats=[]; items=[]; debris=[]; questionPool = JSON.parse(JSON.stringify(allQuestions)); // Deep copy
-        hero.x=100; hero.y=300; hero.life=3; score=0; timer=120; camX=0;
-        
-        // Génération du Niveau
-        plats.push({x:-50, y:400, w:400, h:50}); // Sol départ
-        
-        for(let i=0; i<30; i++){
-            let px=350+(i*120), py=350-Math.random()*120;
-            plats.push({x:px, y:py, w:90, h:20});
-            
-            // Générer items (Livres ou pièces)
-            let type = Math.random()>0.7 ? 's' : 'c'; // 's' pour scroll (quiz), 'c' pour coin
-            items.push({x:px+35, y:py-30, t:type, a:true});
-        }
-        
-        // Plateforme de fin
-        plats.push({x:LEVEL_W, y:350, w:300, h:50, exit:true});
-
-        clearInterval(interval);
-        interval=setInterval(()=>{ 
-            if(state=='play'){ 
-                timer--; ui(); 
-                if(timer<=0) lose("Temps écoulé !"); 
-            } 
-        }, 1000);
-        
-        state='play'; loop();
-    }
-
-    function loop() {
-        if(state=='end') return;
-        requestAnimationFrame(loop);
-        if(state=='play') update();
-        draw();
-    }
-
-    function update() {
-        frame++; 
-        if(shake>0) shake*=0.9; if(flash>0) flash--; if(hero.invul>0) hero.invul--;
-
-        // Caméra
-        let target = hero.x - 200;
-        if(target<0) target=0; if(target>LEVEL_W-600) target=LEVEL_W-600;
-        camX += (target - camX) * 0.1;
-
-        // Mouvement Physique
-        if(keys['ArrowRight']) hero.vx=6; 
-        else if(keys['ArrowLeft']) hero.vx=-6; 
-        else hero.vx*=0.8;
-        
-        hero.vy+=0.8; // Gravité
-        hero.x+=hero.vx; hero.y+=hero.vy;
-        
-        // Animation simple
-        if(Math.abs(hero.vx)>0.5 && hero.g) hero.anim+=0.2; else hero.anim=0;
-
-        // Collisions Plateformes
-        hero.g=false;
-        plats.forEach(p=>{
-            // Collision basique AABB
-            if(hero.x+hero.w>p.x && hero.x<p.x+p.w && hero.y+hero.h>p.y && hero.y+hero.h<p.y+p.h+20 && hero.vy>=0){
-                hero.g=true; hero.vy=0; hero.y=p.y-hero.h;
-                if(p.exit) win();
-            }
-        });
-
-        // Chute
-        if(hero.y>600) { hurt(); hero.x=camX+100; hero.y=100; hero.vy=0; }
-
-        // Gestion Difficulté (Pierres qui tombent)
-        let difficulty = 3 + (hero.x / LEVEL_W) * 5; 
-        // Si mobile, on réduit un peu la vitesse des pierres
-        if(window.innerWidth < 900) difficulty *= 0.7;
-
-        if(frame%50==0) debris.push({x:camX+Math.random()*800, y:-50, vx:(Math.random()-0.5)*2, vy:difficulty, s:20+Math.random()*20});
-        
-        debris.forEach((d,i)=>{
-            d.x+=d.vx; d.y+=d.vy; if(d.y>600) debris.splice(i,1);
-            if(hero.invul<=0 && col(hero,d.x,d.y,d.s,d.s)) { hurt(); debris.splice(i,1); }
-        });
-
-        // Items
-        items.forEach(it=>{
-            if(it.a && col(hero,it.x,it.y,20,20)){
-                it.a=false;
-                if(it.t=='c') { score++; sfx('c'); ui(); }
-                if(it.t=='s') { runQuiz(); }
-            }
-        });
-    }
-
-    function runQuiz() {
-        if(questionPool.length === 0) { score+=10; sfx('c'); return; } // Plus de questions
-
-        state = 'quiz'; sfx('q');
-        document.getElementById('quiz').classList.remove('hidden');
-        document.getElementById('q-box').style.display = 'flex';
-        document.getElementById('feedback-msg').style.display = 'none';
-        
-        // Choix aléatoire
-        let idx = Math.floor(Math.random() * questionPool.length);
-        let q = questionPool[idx];
-        questionPool.splice(idx, 1); // Retire la question posée
-        
-        document.getElementById('q-txt').innerText = q.q;
-        let box = document.getElementById('q-box'); box.innerHTML = '';
-
-        // Mélange des réponses
-        let indices = [0, 1].sort(() => Math.random() - 0.5);
-
-        indices.forEach(i => {
-            let btn = document.createElement('button');
-            btn.className = 'quiz-btn';
-            btn.innerText = q.a[i]; 
-            // q.r est l'index de la bonne réponse dans le tableau original (souvent 0 ici)
-            btn.onclick = () => handleAnswer(i === q.r); 
-            box.appendChild(btn);
-        });
-    }
-
-    function handleAnswer(isCorrect) {
-        document.getElementById('q-box').style.display = 'none';
-        let fb = document.getElementById('feedback-msg');
-        fb.style.display = 'block';
-        
-        if(isCorrect) {
-            fb.innerText = "✅ CORRECT !"; fb.className = "good";
-            score += 20; sfx('ok');
-        } else {
-            fb.innerText = "❌ INCORRECT..."; fb.className = "bad";
-            hero.life--; sfx('no');
-        }
-        ui();
-        setTimeout(() => {
-            document.getElementById('quiz').classList.add('hidden');
-            if(hero.life <= 0) lose("Blessures critiques !"); 
-            else state = 'play';
-        }, 1500);
-    }
-
-    function hurt() { 
-        sfx('h'); hero.life--; hero.invul=60; shake=15; flash=10; ui(); 
-        if(hero.life<=0) lose("Tu es tombé au combat !"); 
-    }
-    
-    function win() { 
-        sfx('w'); state='end';
-        document.getElementById('victory').classList.remove('hidden');
-        document.getElementById('final-score').innerText = score;
-    }
-    
-    function lose(msg) {
-        state='end';
-        document.getElementById('gameover').classList.remove('hidden');
-        document.getElementById('go-msg').innerText = msg;
-    }
-
-    function draw() {
-        // Redimensionnement dynamique
-        let scale = 1;
-        if(window.innerWidth < 800) {
-            scale = window.innerWidth / 800;
-        }
-        cvs.width = 800 * scale; cvs.height = 450 * scale;
-        ctx.save(); ctx.scale(scale, scale);
-
-        // Fond
-        if(bgOk) {
-            ctx.drawImage(bg,0,0,800,450);
-        } else { 
-            let g=ctx.createLinearGradient(0,0,0,450); 
-            g.addColorStop(0,'#2C3E50'); g.addColorStop(1,'#C0392B'); 
-            ctx.fillStyle=g; ctx.fillRect(0,0,800,450); 
-        }
-
-        ctx.save();
-        let sx=(Math.random()-0.5)*shake, sy=(Math.random()-0.5)*shake;
-        ctx.translate(-camX+sx, sy);
-
-        // Plateformes
-        ctx.fillStyle='#A04000';
-        plats.forEach(p=>{ 
-            ctx.fillRect(p.x,p.y,p.w,p.h); 
-            ctx.strokeStyle='#E67E22'; ctx.lineWidth=2; ctx.strokeRect(p.x,p.y,p.w,p.h);
-            // Drapeau Fin
-            if(p.exit) { 
-                ctx.fillStyle='gold'; ctx.fillRect(p.x+50,p.y-60,60,60); 
-                ctx.fillStyle='#000'; ctx.fillRect(p.x+70,p.y-60,20,60); 
-            }
-        });
-
-        // Items
-        items.forEach(it=>{ if(it.a){
-            let f=Math.sin(frame*0.1)*5;
-            if(it.t=='c'){ ctx.fillStyle='#F1C40F'; ctx.beginPath(); ctx.arc(it.x+10,it.y+10+f,10,0,6.28); ctx.fill(); } // Coin
-            else { ctx.fillStyle='#3498DB'; ctx.fillRect(it.x,it.y+f,20,25); ctx.fillStyle='#FFF'; ctx.fillRect(it.x+5,it.y+5+f,10,15); } // Livre
-        }});
-
-        // Débris
-        ctx.fillStyle='#7F8C8D'; debris.forEach(d=>ctx.fillRect(d.x,d.y,d.s,d.s));
-
-        // Héros
-        if(hero.invul%10<5){
-            let l=Math.sin(hero.anim)*10;
-            ctx.fillStyle='#145A32'; ctx.fillRect(hero.x+5,hero.y+30,8,15+l); ctx.fillRect(hero.x+18,hero.y+30,8,15-l); // Jambes
-            ctx.fillStyle='#27AE60'; ctx.fillRect(hero.x,hero.y+10,30,25); // Corps
-            ctx.fillStyle='#F39C12'; ctx.fillRect(hero.x,hero.y+25,30,5); // Ceinture
-            ctx.fillStyle='#E59866'; ctx.beginPath(); ctx.arc(hero.x+15,hero.y+5,10,0,6.28); ctx.fill(); // Tete
-            ctx.fillStyle='#FFF'; ctx.beginPath(); ctx.arc(hero.x+15,hero.y,11,3.14,0); ctx.fill(); // Turban
-        }
-
-        ctx.restore();
-        if(flash>0){ ctx.fillStyle=`rgba(255,0,0,${flash/20})`; ctx.fillRect(0,0,800,450); }
-        ctx.restore();
-    }
-
-    function col(h,x,y,w,h2){ return h.x<x+w && h.x+h.w>x && h.y<y+h2 && h.y+h.h>y; }
-    function ui(){ document.getElementById('time-d').innerText=timer; document.getElementById('score-d').innerText=score; document.getElementById('life-d').innerText=hero.life; }
-
-    // --- 3. INPUTS ---
-    window.onkeydown=e=>{ 
-        keys[e.code]=true; 
-        if((e.code=='Space'||e.code=='ArrowUp')&&hero.g&&state=='play'){hero.vy=-14;sfx('j');}
-    };
-    window.onkeyup=e=>keys[e.code]=false;
-
-    // Gestion Tactile (Pointer Events pour meilleure réactivité)
-    const setupBtn = (id, key) => {
-        const btn = document.getElementById(id);
-        
-        // Empêche le menu contextuel sur mobile
-        btn.oncontextmenu = (e) => { e.preventDefault(); e.stopPropagation(); return false; };
-        
-        btn.onpointerdown = (e) => {
-            e.preventDefault();
-            btn.classList.add('pressed');
-            keys[key] = true;
-            if(key === 'Space' && hero.g && state === 'play') { hero.vy = -14; sfx('j'); }
-        };
-        
-        const release = (e) => {
-            e.preventDefault();
-            btn.classList.remove('pressed');
-            keys[key] = false;
-        };
-        
-        btn.onpointerup = release;
-        btn.onpointerleave = release;
-    };
-
-    setupBtn('btn-l', 'ArrowLeft');
-    setupBtn('btn-r', 'ArrowRight');
-    setupBtn('btn-j', 'Space');
-
-</script>
-</body>
-</html>
+        <div class="badge" style="color
